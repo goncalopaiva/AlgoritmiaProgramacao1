@@ -1,0 +1,3 @@
+C:/Users/esago/CLionProjects/ProjetoLPIAEDI/cmake-build-debug/CMakeFiles/ProjetoLPIAEDI.dir
+C:/Users/esago/CLionProjects/ProjetoLPIAEDI/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/esago/CLionProjects/ProjetoLPIAEDI/cmake-build-debug/CMakeFiles/rebuild_cache.dir
