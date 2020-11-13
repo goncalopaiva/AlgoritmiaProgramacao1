@@ -1,4 +1,5 @@
 file(REMOVE_RECURSE
+  "CMakeFiles/ProjetoLPIAEDI.dir/alojamentos.c.obj"
   "CMakeFiles/ProjetoLPIAEDI.dir/main.c.obj"
   "ProjetoLPIAEDI.exe"
   "ProjetoLPIAEDI.exe.manifest"

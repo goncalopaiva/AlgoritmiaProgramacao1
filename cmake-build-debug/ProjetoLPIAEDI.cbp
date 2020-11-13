@@ -74,6 +74,12 @@
 				</MakeCommands>
 			</Target>
 		</Build>
+		<Unit filename="C:/Users/esago/CLionProjects/ProjetoLPIAEDI/alojamentos.c">
+			<Option target="ProjetoLPIAEDI"/>
+		</Unit>
+		<Unit filename="C:/Users/esago/CLionProjects/ProjetoLPIAEDI/alojamentos.h">
+			<Option target="ProjetoLPIAEDI"/>
+		</Unit>
 		<Unit filename="C:/Users/esago/CLionProjects/ProjetoLPIAEDI/main.c">
 			<Option target="ProjetoLPIAEDI"/>
 		</Unit>

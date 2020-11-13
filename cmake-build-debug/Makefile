@@ -142,6 +142,33 @@ ProjetoLPIAEDI/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\ProjetoLPIAEDI.dir\build.make CMakeFiles/ProjetoLPIAEDI.dir/build
 .PHONY : ProjetoLPIAEDI/fast
 
+alojamentos.obj: alojamentos.c.obj
+
+.PHONY : alojamentos.obj
+
+# target to build an object file
+alojamentos.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\ProjetoLPIAEDI.dir\build.make CMakeFiles/ProjetoLPIAEDI.dir/alojamentos.c.obj
+.PHONY : alojamentos.c.obj
+
+alojamentos.i: alojamentos.c.i
+
+.PHONY : alojamentos.i
+
+# target to preprocess a source file
+alojamentos.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\ProjetoLPIAEDI.dir\build.make CMakeFiles/ProjetoLPIAEDI.dir/alojamentos.c.i
+.PHONY : alojamentos.c.i
+
+alojamentos.s: alojamentos.c.s
+
+.PHONY : alojamentos.s
+
+# target to generate assembly for a file
+alojamentos.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\ProjetoLPIAEDI.dir\build.make CMakeFiles/ProjetoLPIAEDI.dir/alojamentos.c.s
+.PHONY : alojamentos.c.s
+
 main.obj: main.c.obj
 
 .PHONY : main.obj
@@ -178,6 +205,9 @@ help:
 	@echo ... edit_cache
 	@echo ... rebuild_cache
 	@echo ... ProjetoLPIAEDI
+	@echo ... alojamentos.obj
+	@echo ... alojamentos.i
+	@echo ... alojamentos.s
 	@echo ... main.obj
 	@echo ... main.i
 	@echo ... main.s

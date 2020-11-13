@@ -3,4 +3,4 @@ project(ProjetoLPIAEDI C)
 
 set(CMAKE_C_STANDARD 99)
 
-add_executable(ProjetoLPIAEDI main.c)
+add_executable(ProjetoLPIAEDI main.c alojamentos.c alojamentos.h)
