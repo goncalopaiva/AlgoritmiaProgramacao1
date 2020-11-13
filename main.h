@@ -11,6 +11,5 @@
 
 int main();
 void linha();
-int sair();
 
 #endif //PROJETOLPIAEDI_MAIN_H

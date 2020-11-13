@@ -3,7 +3,7 @@
 //
 
 #include "alojamentos.h"
-#include "main.c"
+#include "main.h"
 
 int menu_alojamentos() {
 
@@ -12,11 +12,6 @@ int menu_alojamentos() {
     printf("----------------------------------\n");
     printf("-------- MENU ALOJAMENTOS --------\n");
     printf("----------------------------------\n");
-
-    printf("\n\n");
-
-    printf("Escolha uma opcao: \n");
-    printf("\t 1. Ver alojamentos\n");
 
     printf("\n\n");
 

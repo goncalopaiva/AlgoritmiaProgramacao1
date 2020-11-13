@@ -36,12 +36,11 @@ int main() {
     printf("\t 0. Sair\n");
 
 
-    char op;
-    printf("\nOpcao: ");
-    scanf("%c",op);
+    int op;
+    printf("\nOpcao:  ");
 
     do {
-        scanf("%d",&op);
+        op=getchar();
 
         switch (op)
         {
@@ -51,8 +50,7 @@ int main() {
                 break;
             case 3: editar_alojamentos();
                 break;
-            case 0: sair();
-                break;
+            case 0: break;
 
             default: printf("Opcao Invalida!\n");
         }
