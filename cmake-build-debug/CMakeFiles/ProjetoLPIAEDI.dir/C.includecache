@@ -1,0 +1,22 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+C:/Users/esago/CLionProjects/ProjetoLPIAEDI/alojamentos.c
+alojamentos.h
+C:/Users/esago/CLionProjects/ProjetoLPIAEDI/alojamentos.h
+
+C:/Users/esago/CLionProjects/ProjetoLPIAEDI/alojamentos.h
+stdio.h
+-
+string.h
+-
+stdlib.h
+-
+time.h
+-
+

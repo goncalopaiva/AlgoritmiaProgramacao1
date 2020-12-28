@@ -1,0 +1,5 @@
+edificio,nome,latitude,longitude,morada,preço_dia_m2
+1,PF Boavista,41.162392,-8.655714,Avenida da Boavista,1.5
+2,PF Riberia,41.140416,-8.612434,Cais da Ribeira,1.8
+3,PF Norte,41.15,-8.61024,Rua do Norte,1.3
+4,PF Santa Catarina,41.14638,-8.60705,Rua Santa Catarina,1.7
