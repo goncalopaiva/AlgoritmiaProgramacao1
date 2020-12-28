@@ -9,40 +9,104 @@
 #include <string.h>
 #include <stdlib.h>
 
-#define TAM_VECTOR 20
+#define MAX200 200
+#define MAX10 10
 
-//TODO: editar a estrutura ALOJAMENTO
 
-typedef struct alojamentos {
-    int num_alojamentos;
-    char id[TAM_VECTOR];
-    char nome[TAM_VECTOR];
-    char categoria[TAM_VECTOR];
-} ALOJAMENTO;
+typedef struct politica {
+    char politica[MAX200];
+    char plataforma[MAX200];
+    char *regras[];
+} POLITICAS;
+
+typedef struct estudio_politica {
+    int estudio;
+    POLITICAS politica;
+    char *regras[];
+} ESTUDIO_POLITICAS;
+
+//Rever estruturas politica e estudo_politica
+
+typedef struct evento {
+    int id;
+    char tipo[MAX200];
+    char data_inicio[MAX10]; //Mudar para data idk
+    char data_fim[MAX10]; //Mudar para data idk
+    int hospede;
+    int estudio;
+    char plataforma[MAX200];
+    struct evento *nextEvento;
+} EVENTOS;
+
+typedef struct dia {
+    char dia[MAX10];
+    EVENTOS evento;
+} DIAS;
+
+typedef struct agendas {
+    char agenda[MAX200];
+    DIAS dia;
+} AGENDAS;
+
+typedef struct estudio {
+    int estudio;
+    int numero;
+    int edificio;
+    char configuracao[MAX10];
+    int area;
+    POLITICAS politicas;
+} ESTUDIOS;
+
+typedef struct edificio {
+    int edificio;
+    char nome[MAX200];
+    float latitude;
+    float longitude;
+    char morada[MAX200];
+    float preco_dia_m2; //Preco diario por m^2. Preço diario estudio=(preco_dia_m2 do edifico) x (area do estudio)
+    ESTUDIOS estudios;
+    struct edificio *pnext;
+} EDIFICIOS;
+
+typedef struct lote_edificios {
+    EDIFICIOS *pedificios;
+} LOTE_EDIFICIOS;
+
+
+
+
+
+
+
+int main_projeto();
 
 /**
- * Funcao que imprime as opçoes do menu de alojamentos.
- * @return
+ * Dado um array de nomes de edificios, cria e inicia uma lista ligada de edificios.
+ * @param pnomes - array de nomes de edificios
+ * @param size - numero de edificios a serem inseridos
+ * @return cópia do lote de edificios criado
  */
-int menu_alojamentos();
+LOTE_EDIFICIOS create_lote (const char *pnomes[], int size);
 
 /**
- * Funcao que permite visualizar os alojamentos.
- * @return
+ * Insere um novo edificio no lote de edificios já inicializado.
+ * @param pl - pointer para o lote de edificios ja inicializado
+ * @param edificio -
+ * @param nome - nome do edificio a adicionar
+ * @param longitude - longitude do edificio a adicionar
+ * @param latitude - latitude do edificio a adicionar
+ * @param morada - morada do edificio a adicionar
+ * @param preco_dia_m2 - preco por dia por m^2 do edificio a adicionar
  */
-int ver_alojamentos();
+void insert_edificio(LOTE_EDIFICIOS *pl, int edificio, const char *nome, float longitude, float latitude, const char *morada, float preco_dia_m2);
 
-/**
- * Funcao que permite adicionar alojamentos.
- * @return
- */
-int adicionar_alojamentos();
 
-/**
- * Funcao que permite editar os alojamentos.
- * @return
- */
-int editar_alojamentos();
+EDIFICIOS* find_edificios(LOTE_EDIFICIOS *lt, const char * nome_edificios);
 
+
+void print_edificios (EDIFICIOS *pedificio, int size);
+
+
+void print_estudios (ESTUDIOS *pestudios, int size);
 
 #endif //PROJETOLPIAEDI_ALOJAMENTOS_H

@@ -76,22 +76,9 @@ include CMakeFiles/ProjetoLPIAEDI.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/ProjetoLPIAEDI.dir/flags.make
 
-CMakeFiles/ProjetoLPIAEDI.dir/main.c.obj: CMakeFiles/ProjetoLPIAEDI.dir/flags.make
-CMakeFiles/ProjetoLPIAEDI.dir/main.c.obj: ../main.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\esago\CLionProjects\ProjetoLPIAEDI\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object CMakeFiles/ProjetoLPIAEDI.dir/main.c.obj"
-	C:\PROGRA~2\MINGW-~1\I686-8~1.0-P\mingw32\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles\ProjetoLPIAEDI.dir\main.c.obj   -c C:\Users\esago\CLionProjects\ProjetoLPIAEDI\main.c
-
-CMakeFiles/ProjetoLPIAEDI.dir/main.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ProjetoLPIAEDI.dir/main.c.i"
-	C:\PROGRA~2\MINGW-~1\I686-8~1.0-P\mingw32\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E C:\Users\esago\CLionProjects\ProjetoLPIAEDI\main.c > CMakeFiles\ProjetoLPIAEDI.dir\main.c.i
-
-CMakeFiles/ProjetoLPIAEDI.dir/main.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ProjetoLPIAEDI.dir/main.c.s"
-	C:\PROGRA~2\MINGW-~1\I686-8~1.0-P\mingw32\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S C:\Users\esago\CLionProjects\ProjetoLPIAEDI\main.c -o CMakeFiles\ProjetoLPIAEDI.dir\main.c.s
-
 CMakeFiles/ProjetoLPIAEDI.dir/alojamentos.c.obj: CMakeFiles/ProjetoLPIAEDI.dir/flags.make
 CMakeFiles/ProjetoLPIAEDI.dir/alojamentos.c.obj: ../alojamentos.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\esago\CLionProjects\ProjetoLPIAEDI\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building C object CMakeFiles/ProjetoLPIAEDI.dir/alojamentos.c.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\esago\CLionProjects\ProjetoLPIAEDI\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object CMakeFiles/ProjetoLPIAEDI.dir/alojamentos.c.obj"
 	C:\PROGRA~2\MINGW-~1\I686-8~1.0-P\mingw32\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles\ProjetoLPIAEDI.dir\alojamentos.c.obj   -c C:\Users\esago\CLionProjects\ProjetoLPIAEDI\alojamentos.c
 
 CMakeFiles/ProjetoLPIAEDI.dir/alojamentos.c.i: cmake_force
@@ -102,16 +89,29 @@ CMakeFiles/ProjetoLPIAEDI.dir/alojamentos.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ProjetoLPIAEDI.dir/alojamentos.c.s"
 	C:\PROGRA~2\MINGW-~1\I686-8~1.0-P\mingw32\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S C:\Users\esago\CLionProjects\ProjetoLPIAEDI\alojamentos.c -o CMakeFiles\ProjetoLPIAEDI.dir\alojamentos.c.s
 
+CMakeFiles/ProjetoLPIAEDI.dir/main.c.obj: CMakeFiles/ProjetoLPIAEDI.dir/flags.make
+CMakeFiles/ProjetoLPIAEDI.dir/main.c.obj: ../main.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\esago\CLionProjects\ProjetoLPIAEDI\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building C object CMakeFiles/ProjetoLPIAEDI.dir/main.c.obj"
+	C:\PROGRA~2\MINGW-~1\I686-8~1.0-P\mingw32\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles\ProjetoLPIAEDI.dir\main.c.obj   -c C:\Users\esago\CLionProjects\ProjetoLPIAEDI\main.c
+
+CMakeFiles/ProjetoLPIAEDI.dir/main.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ProjetoLPIAEDI.dir/main.c.i"
+	C:\PROGRA~2\MINGW-~1\I686-8~1.0-P\mingw32\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E C:\Users\esago\CLionProjects\ProjetoLPIAEDI\main.c > CMakeFiles\ProjetoLPIAEDI.dir\main.c.i
+
+CMakeFiles/ProjetoLPIAEDI.dir/main.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ProjetoLPIAEDI.dir/main.c.s"
+	C:\PROGRA~2\MINGW-~1\I686-8~1.0-P\mingw32\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S C:\Users\esago\CLionProjects\ProjetoLPIAEDI\main.c -o CMakeFiles\ProjetoLPIAEDI.dir\main.c.s
+
 # Object files for target ProjetoLPIAEDI
 ProjetoLPIAEDI_OBJECTS = \
-"CMakeFiles/ProjetoLPIAEDI.dir/main.c.obj" \
-"CMakeFiles/ProjetoLPIAEDI.dir/alojamentos.c.obj"
+"CMakeFiles/ProjetoLPIAEDI.dir/alojamentos.c.obj" \
+"CMakeFiles/ProjetoLPIAEDI.dir/main.c.obj"
 
 # External object files for target ProjetoLPIAEDI
 ProjetoLPIAEDI_EXTERNAL_OBJECTS =
 
-ProjetoLPIAEDI.exe: CMakeFiles/ProjetoLPIAEDI.dir/main.c.obj
 ProjetoLPIAEDI.exe: CMakeFiles/ProjetoLPIAEDI.dir/alojamentos.c.obj
+ProjetoLPIAEDI.exe: CMakeFiles/ProjetoLPIAEDI.dir/main.c.obj
 ProjetoLPIAEDI.exe: CMakeFiles/ProjetoLPIAEDI.dir/build.make
 ProjetoLPIAEDI.exe: CMakeFiles/ProjetoLPIAEDI.dir/linklibs.rsp
 ProjetoLPIAEDI.exe: CMakeFiles/ProjetoLPIAEDI.dir/objects1.rsp

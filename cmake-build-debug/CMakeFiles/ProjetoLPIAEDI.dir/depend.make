@@ -3,9 +3,7 @@
 
 CMakeFiles/ProjetoLPIAEDI.dir/alojamentos.c.obj: ../alojamentos.c
 CMakeFiles/ProjetoLPIAEDI.dir/alojamentos.c.obj: ../alojamentos.h
-CMakeFiles/ProjetoLPIAEDI.dir/alojamentos.c.obj: ../main.h
 
 CMakeFiles/ProjetoLPIAEDI.dir/main.c.obj: ../alojamentos.h
 CMakeFiles/ProjetoLPIAEDI.dir/main.c.obj: ../main.c
-CMakeFiles/ProjetoLPIAEDI.dir/main.c.obj: ../main.h
 

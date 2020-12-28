@@ -3,72 +3,116 @@
 //
 
 #include "alojamentos.h"
-#include "main.h"
 
-int menu_alojamentos() {
+struct EDIFICIOS* head;
 
-    int op =0;
+int main_projeto(){
 
-    printf("----------------------------------\n");
-    printf("-------- MENU ALOJAMENTOS --------\n");
-    printf("----------------------------------\n");
+}
 
-    printf("\n\n");
+LOTE_EDIFICIOS create_lote (const char *pnomes[], int size) {
+    LOTE_EDIFICIOS l = {NULL};
+    for (int i=0; i<size; i++) {
+        insert_edificio(&l, pnomes[i]);
+    }
+    return l;
+}
 
-    printf("Escolha uma opcao: \n");
-    printf("\t 1. Ver alojamentos\n");
-    printf("\t 2. Adicionar alojamentos\n");
-    printf("\t 3. Editar alojamentos\n");
-    printf("\t 4. (...)\n");
-    printf("\t 0. Voltar ao menu principal\n");
+void insert_edificio(LOTE_EDIFICIOS *pl, int edificio, const char *nome, float longitude, float latitude, const char *morada, float preco_dia_m2){
+    EDIFICIOS *pp = (EDIFICIOS *) malloc (sizeof (EDIFICIOS));
+    pp->edificio = edificio;
+    pp->nome = (char *) malloc (strlen (nome));
+    strcpy(pp->nome, nome);
+    pp->longitude = longitude;
+    pp->latitude = latitude;
+    pp->morada = (char *) malloc (strlen (morada));
+    strcpy(pp->nome, morada);
+    pp->preco_dia_m2 = preco_dia_m2;
 
-    do {
-        scanf("%d",&op);
+    pp->pnext = NULL;
 
-        switch (op)
-        {
-            case 1: ver_alojamentos();
-                break;
-            case 2: adicionar_alojamentos();
-                break;
-            case 3: editar_alojamentos();
-                break;
-            case 0: main();
+    if (pl->pedificios == NULL) {
+        pl->pedificios = pp;
+        return;
+    }
 
-            default: printf("Opcao Invalida!\n");
+    EDIFICIOS *pcurrent = pl->pedificios;
+    EDIFICIOS *pprev = NULL;
+
+    while (pcurrent != NULL) {
+        pprev = pcurrent;
+        pcurrent = pcurrent->pnext;
+    }
+    pp->pnext = pcurrent;
+    pprev->pnext = pp;
+
+}
+
+EDIFICIOS* find_edificios(LOTE_EDIFICIOS *lt, const char * nome_edificios) {
+    EDIFICIOS *pp = lt->pedificios;
+    while (pp != NULL) {
+        if (strcmp(nome_edificios, pp->nome) == 0) {
+            return pp;
         }
-    } while (op!=0);
-    return 0;
+        pp=pp->pnext;
+    }
+    return NULL;
 }
 
-int ver_alojamentos() {
-    //Ver todos os alojamentos ou só 1?
-    //Se todos -> imprimir todos os alojamentos.
-    //Se só 1 -> introduza o codigo do alojamento.
-
-    linha();
-    printf("----> Lista de todos os alojamentos:\n\n");
+//função que altera/remove edificios
 
 
-}
+void insert_estudio(LOTE_EDIFICIOS *lt, char edificio[MAX200] ,int estudio, int numero, int edificio, char configuracao[MAX10], int area, POLITICAS politicas) {
 
-int adicionar_alojamentos() {
-    //Pedir informacao do alojamento (morada, preco, ...)
-    //Código do alojamento -> proximo elemento.
+    EDIFICIOS *ped = find_edificios(lt,edificio);
 
-    linha();
-    printf("----> Adicionar novo alojamento:\n\n");
+    ESTUDIOS *pes = (...);
+
+    pes->estudio = estudio;
+    pes->numero = numero;
+    pes->edificio=edificio;
+    strcpy(pes->configuracao, configuracao);
+    pes->area=area;
+    pes->politicas=politicas;
 
 }
 
-int editar_alojamentos() {
-    //Mostrar todos os alojamentos
-    //Pedir codigo do alojamento que quer editar.
-    //Pedir campo que quer editar.
-    //Guardar novas informacao no alojamento.
-
-    linha();
-    printf("----> Editar alojamento:\n\n");
 
 
+//funcao que insere estudios
+//funcao que procura estudios
+//funcao que altera/remove estudios
+
+//funcao que insere hospede
+//funcao que procura hospede
+//funcao que altera/remove hospede
+
+//funcao que insere politica preços
+//funcao que procura politicas de preco
+//funcao que altera/remove politicas preco
+
+//funcao que insere/cria evento
+//funcao que procura evento
+//funcao que altera/remove evento
+
+
+
+void print_edificios (EDIFICIOS *pedificio, int size) { //Otimização: sem o size
+    printf("----->start print_edificios()\n");
+    for (int i=0; i<size; i++) {
+        printf("%d, %s, %f, %f, %s, %f\n", pedificio->edificio, pedificio->nome, pedificio->latitude, pedificio->longitude, pedificio->morada, pedificio->preco_dia_m2);
+        pedificio=pedificio->pnext;
+    }
+    printf("end print_edificios()\n");
 }
+
+
+
+void print_estudios (ESTUDIOS *pestudios, int size) {
+    printf("start print_estudios()\n");
+    for (int i=0; i<size; i++) {
+        printf("%d, %d, %d, %s, %d\n", pestudios->estudio, pestudios->numero, pestudios->edificio, pestudios->configuracao, pestudios->area);
+    }
+    printf("end print_estudios()\n");
+}
+

@@ -83,9 +83,6 @@
 		<Unit filename="C:/Users/esago/CLionProjects/ProjetoLPIAEDI/main.c">
 			<Option target="ProjetoLPIAEDI"/>
 		</Unit>
-		<Unit filename="C:/Users/esago/CLionProjects/ProjetoLPIAEDI/main.h">
-			<Option target="ProjetoLPIAEDI"/>
-		</Unit>
 		<Unit filename="C:/Users/esago/CLionProjects/ProjetoLPIAEDI/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\"/>
 		</Unit>
