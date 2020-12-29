@@ -11,12 +11,13 @@
 
 #define MAX200 200
 #define MAX10 10
+#define BUFFER_SIZE 1024
 
 
 typedef struct politica {
     char politica[MAX200];
     char plataforma[MAX200];
-    char *regras[];
+    char regras[MAX200];
 } POLITICAS;
 
 typedef struct estudio_politica {
@@ -64,8 +65,8 @@ typedef struct edificio {
     float longitude;
     char morada[MAX200];
     float preco_dia_m2; //Preco diario por m^2. Preço diario estudio=(preco_dia_m2 do edifico) x (area do estudio)
-    ESTUDIOS estudios;
     struct edificio *pnext;
+    ESTUDIOS estudios[];
 } EDIFICIOS;
 
 typedef struct lote_edificios {
@@ -86,7 +87,7 @@ int main_projeto();
  * @param size - numero de edificios a serem inseridos
  * @return cópia do lote de edificios criado
  */
-LOTE_EDIFICIOS create_lote (const char *pnomes[], int size);
+//LOTE_EDIFICIOS create_lote (const char *pnomes[], int size);
 
 /**
  * Insere um novo edificio no lote de edificios já inicializado.
@@ -100,13 +101,20 @@ LOTE_EDIFICIOS create_lote (const char *pnomes[], int size);
  */
 void insert_edificio(LOTE_EDIFICIOS *pl, int edificio, const char *nome, float longitude, float latitude, const char *morada, float preco_dia_m2);
 
+void read_edificos_csv (LOTE_EDIFICIOS lt, char filename[]);
+
+void read_estudios_csv (LOTE_EDIFICIOS lt, char filename[]);
+
+void read_eventos_csv (char filename[]);
+
 
 EDIFICIOS* find_edificios(LOTE_EDIFICIOS *lt, const char * nome_edificios);
 
+//void insert_estudio(LOTE_EDIFICIOS *lt, char edificio[MAX200] ,int estudio, int numero, int edificio, char configuracao[MAX10], int area, POLITICAS politicas);
 
-void print_edificios (EDIFICIOS *pedificio, int size);
+void print_edificios (LOTE_EDIFICIOS *lt);
 
+void print_estudios (EDIFICIOS pedificio, int size);
 
-void print_estudios (ESTUDIOS *pestudios, int size);
 
 #endif //PROJETOLPIAEDI_ALOJAMENTOS_H
