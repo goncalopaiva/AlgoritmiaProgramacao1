@@ -39,13 +39,9 @@
 
 # Notas
 
-Entende-se por politica de precos um conjunto de regras de custo. Na sua versao base, cada plataforma devera definir 
-uma politica de precos (sem apresentar valores concretos). Cada estudio devera concretizar as politicas de precos de 
-cada uma das plataformas em que esta inserido.
+Entende-se por politica de precos um conjunto de regras de custo. Na sua versao base, cada plataforma devera definir uma politica de precos (sem apresentar valores concretos). Cada estudio devera concretizar as politicas de precos de cada uma das plataformas em que esta inserido.
 
-e.g. estudio 2 concretiza a politica p1 com os valores 0.3 -0.2 0.3. 
-Podemos entao assumir que o estudio 2 se encontra inserido na plataforma associada a 
-politica p1 (airbnc) e que define as seguintes taxas/descontos:
+e.g. estudio 2 concretiza a politica p1 com os valores 0.3 -0.2 0.3. Podemos entao assumir que o estudio 2 se encontra inserido na plataforma associada a politica p1 (airbnc) e que define as seguintes taxas/descontos:
 
 * taxa adicional de 30% para estudio com uma configuracao especifica
 * desconto de 20% para reservas superiores a um determinado numero de dias
