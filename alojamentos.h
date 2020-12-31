@@ -41,7 +41,8 @@ typedef struct evento {
 
 typedef struct dia {
     char dia[MAX10];
-    EVENTOS evento;
+    EVENTOS *evento;
+    int nEventos;
 } DIAS;
 
 typedef struct agendas {
@@ -70,7 +71,9 @@ typedef struct edificio {
 } EDIFICIOS;
 
 typedef struct lote_edificios {
+    char nome[MAX200];
     EDIFICIOS *pedificios;
+    int nEdificios;
 } LOTE_EDIFICIOS;
 
 
@@ -99,9 +102,11 @@ int main_projeto();
  * @param morada - morada do edificio a adicionar
  * @param preco_dia_m2 - preco por dia por m^2 do edificio a adicionar
  */
+
+
 void insert_edificio(LOTE_EDIFICIOS *pl, int edificio, const char *nome, float longitude, float latitude, const char *morada, float preco_dia_m2);
 
-void read_edificos_csv (LOTE_EDIFICIOS lt, char filename[]);
+void read_edificos_csv (LOTE_EDIFICIOS *lt, char filename[]);
 
 void read_estudios_csv (LOTE_EDIFICIOS lt, char filename[]);
 
