@@ -11,8 +11,6 @@
 
 #define MAX200 200
 #define MAX10 10
-#define BUFFER_SIZE 1024
-
 
 typedef struct politica {
     char politica[MAX200];
@@ -22,11 +20,10 @@ typedef struct politica {
 
 typedef struct estudio_politica {
     int estudio;
-    POLITICAS politica;
+    POLITICAS *politica;
     char *regras[];
 } ESTUDIO_POLITICAS;
 
-//Rever estruturas politica e estudo_politica
 
 typedef struct evento {
     int id;
@@ -47,7 +44,7 @@ typedef struct dia {
 
 typedef struct agendas {
     char agenda[MAX200];
-    DIAS dia;
+    DIAS *dia;
 } AGENDAS;
 
 typedef struct estudio {
@@ -56,7 +53,8 @@ typedef struct estudio {
     int edificio;
     char configuracao[MAX10];
     int area;
-    POLITICAS politicas;
+    AGENDAS *agendas;
+    ESTUDIO_POLITICAS *estudo_politicas;
 } ESTUDIOS;
 
 typedef struct edificio {
@@ -66,8 +64,9 @@ typedef struct edificio {
     float longitude;
     char morada[MAX200];
     float preco_dia_m2; //Preco diario por m^2. Preço diario estudio=(preco_dia_m2 do edifico) x (area do estudio)
+    int n_estudios;
+    ESTUDIOS *estudios;
     struct edificio *pnext;
-    ESTUDIOS estudios[];
 } EDIFICIOS;
 
 typedef struct lote_edificios {
@@ -78,19 +77,10 @@ typedef struct lote_edificios {
 
 
 
-
-
-
-
 int main_projeto();
 
-/**
- * Dado um array de nomes de edificios, cria e inicia uma lista ligada de edificios.
- * @param pnomes - array de nomes de edificios
- * @param size - numero de edificios a serem inseridos
- * @return cópia do lote de edificios criado
- */
-//LOTE_EDIFICIOS create_lote (const char *pnomes[], int size);
+
+//----------------------EDIFICIOS--------------------------------------------------
 
 /**
  * Insere um novo edificio no lote de edificios já inicializado.
@@ -102,24 +92,84 @@ int main_projeto();
  * @param morada - morada do edificio a adicionar
  * @param preco_dia_m2 - preco por dia por m^2 do edificio a adicionar
  */
-
-
 void insert_edificio(LOTE_EDIFICIOS *pl, int edificio, const char *nome, float longitude, float latitude, const char *morada, float preco_dia_m2);
 
+/**
+ * Função que lê um ficheiro csv de edificios.
+ * @param lt - lote de edificios
+ * @param filename - nome do ficheiro a ler
+ */
 void read_edificos_csv (LOTE_EDIFICIOS *lt, char filename[]);
 
-void read_estudios_csv (LOTE_EDIFICIOS lt, char filename[]);
+/**
+ * Função para encontrar um edificio num lote de edificios.
+ * @param lt - lote de edificios
+ * @param numeroEdificio - numero do edificio a encontrar
+ * @return
+ */
+EDIFICIOS* find_edificios(LOTE_EDIFICIOS *lt, int numeroEdificio);
 
-void read_eventos_csv (char filename[]);
-
-
-EDIFICIOS* find_edificios(LOTE_EDIFICIOS *lt, const char * nome_edificios);
-
-//void insert_estudio(LOTE_EDIFICIOS *lt, char edificio[MAX200] ,int estudio, int numero, int edificio, char configuracao[MAX10], int area, POLITICAS politicas);
-
+/**
+ * Função que imprime para o ecrã os edificios de um lote de edificios.
+ * @param lt - lote de edificios
+ */
 void print_edificios (LOTE_EDIFICIOS *lt);
 
-void print_estudios (EDIFICIOS pedificio, int size);
+//--------------------------ESTUDIOS--------------------------------------------------
+
+/**
+ * Função que insere um novo estudio.
+ * @param lt - lote de edificios
+ * @param edificio - edificio ao qual o estudio pertence
+ * @param estudio - id do estudio
+ * @param numero - numero do estudio
+ * @param configuracao - configuração do estudio
+ * @param area - area do estudio
+ */
+void insert_estudio(LOTE_EDIFICIOS *lt, int edificio, int estudio, int numero, char configuracao[], int area);
+
+/**
+ * Função que lê um ficheiro csv de estudios
+ * @param lt - lote de edificios
+ * @param filename - nome do ficheiro
+ */
+void read_estudios_csv (LOTE_EDIFICIOS *lt, char filename[]);
+
+/**
+ * Função para encontrar um estudio num lote de edificios
+ * @param lt - lote de edificios
+ * @param numeroEstudio - numero do estudio a encontrar
+ * @return estudio procurado
+ */
+ESTUDIOS* find_estudios(LOTE_EDIFICIOS *lt, int numeroEstudio);
+
+/**
+ * Função que imprime para o ecrã os estudios de um lote de edificios
+ * @param lt - lote de edificios
+ */
+void print_estudios (LOTE_EDIFICIOS *lt);
+
+//-----------------------AGENDA----------------------------------------------------------
+
+
+//-------------------------DIA----------------------------------------------------------
+
+
+//-----------------------EVENTOS---------------------------------------------------------
+
+void read_eventos_csv (DIAS *dt, char filename[]);
+
+void insert_evento(DIAS *d, int id, const char *tipo, const char *data_inicio, const char *data_fim, int hospede, int estudio, const char *plataforma);
+
+void print_eventos (DIAS *d);
+
+//-------------------POLITICAS-----------------------------------------------------------
+
+
+void insert_politicas (ESTUDIO_POLITICAS *ep, char politica[], char plataforma[], char regras[]);
+
+
+
 
 
 #endif //PROJETOLPIAEDI_ALOJAMENTOS_H
