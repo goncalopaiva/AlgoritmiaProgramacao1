@@ -12,6 +12,13 @@
 #define MAX200 200
 #define MAX10 10
 
+typedef struct hospede {
+    int id;
+    char nome[MAX200];
+    int numeroHospedes;
+    struct hospede *pnext;
+} HOSPEDES;
+
 typedef struct politica {
     char politica[MAX200];
     char plataforma[MAX200];
@@ -23,7 +30,6 @@ typedef struct estudio_politica {
     POLITICAS *politica;
     char *regras[];
 } ESTUDIO_POLITICAS;
-
 
 typedef struct evento {
     int id;
@@ -115,6 +121,20 @@ EDIFICIOS* find_edificios(LOTE_EDIFICIOS *lt, int numeroEdificio);
  */
 void print_edificios (LOTE_EDIFICIOS *lt);
 
+/**
+ * Função que guarda num ficheiro binario a informacao sobre os edificios de lote de edificios.
+ * @param lt - lote de edificios
+ * @param filename - nome do ficheiro
+ */
+void save_edificios_bin (LOTE_EDIFICIOS lt, char filename[]);
+
+/**
+ * Função que le um ficheiro binario de edificios e guarda num lote de edificios.
+ * @param lt - lote de edificios
+ * @param filename - nome do ficheiro
+ */
+void read_edificios_bin(LOTE_EDIFICIOS *lt, char filename[]);
+
 //--------------------------ESTUDIOS--------------------------------------------------
 
 /**
@@ -129,7 +149,7 @@ void print_edificios (LOTE_EDIFICIOS *lt);
 void insert_estudio(LOTE_EDIFICIOS *lt, int edificio, int estudio, int numero, char configuracao[], int area);
 
 /**
- * Função que lê um ficheiro csv de estudios
+ * Função que lê um ficheiro csv de estudio
  * @param lt - lote de edificios
  * @param filename - nome do ficheiro
  */
@@ -148,6 +168,13 @@ ESTUDIOS* find_estudios(LOTE_EDIFICIOS *lt, int numeroEstudio);
  * @param lt - lote de edificios
  */
 void print_estudios (LOTE_EDIFICIOS *lt);
+
+/**
+ * Função que guarda num ficheiro binario a informacao sobre os edificios de lote de edificios.
+ * @param lt - lote de edificios
+ * @param filename - nome do ficheiro
+ */
+void save_estudios_bin (LOTE_EDIFICIOS lt, char filename[]);
 
 //-----------------------AGENDA----------------------------------------------------------
 
@@ -169,6 +196,23 @@ void print_eventos (DIAS *d);
 void insert_politicas (ESTUDIO_POLITICAS *ep, char politica[], char plataforma[], char regras[]);
 
 
+//---------------------HOSPEDES----------------------------------------------------------
+
+/**
+ * Função que insere um hospede novo
+ * @param ph - lista ligada de hospedes
+ * @param id - id do hospede a adicionar
+ * @param nome - nome do hospede a adicionar
+ */
+void insert_hospede (HOSPEDES *ph, int id, char nome[]);
+
+/**
+ * Função que procura um hospede por id
+ * @param ph - lista ligada de hospedes
+ * @param idHospede - id do hospede a procurar
+ * @return hospede encontrado
+ */
+HOSPEDES* find_hospede(HOSPEDES *ph, int idHospede);
 
 
 

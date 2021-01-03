@@ -14,14 +14,8 @@ int main_projeto(){
 
     read_edificos_csv(&l1, "edificios.csv");
     print_edificios(&l1);
+    save_edificios_bin(l1, "edificios.bin");
 
-    read_estudios_csv(&l1, "estudios.csv");
-    insert_estudio(&l1, 2, 1, 1, "AA", 10);
-    print_estudios(&l1);
-
-    ESTUDIOS *e1 = find_estudios(&l1, 8);
-
-    printf("Estudio procurado: Estudio: %d Numero: %d Edificio: %d Configuracao: %s\n",e1->estudio, e1->numero, e1->edificio, e1->configuracao);
 
     printf("end main_projeto()\n");
 }
@@ -152,6 +146,78 @@ void print_edificios (LOTE_EDIFICIOS *lt) {
     printf("closing print_edificios()\n");
 } //A funcionar
 
+void save_edificios_bin (LOTE_EDIFICIOS lt, char filename[]) {
+    printf("opening save_edificios_bin()\n");
+    FILE *fp = NULL;
+    fp = fopen(filename, "wb");
+    if ( (fp = fopen(filename, "wb")) == NULL) {
+        printf("save_edificios_bin(): Erro na abertura do ficheiro %s\n", filename);
+        return;
+    }
+    int size = strlen(lt.nome) + 1;
+    fwrite(&size, sizeof(size), 1, fp);
+    fwrite(lt.nome, sizeof (char), size, fp);
+    fwrite(&lt.nEdificios, sizeof(int), 1, fp);
+    EDIFICIOS *pe = lt.pedificios;
+    for (int i=0; i<lt.nEdificios; i++) {
+        //int edificio, char nome, float latitude, float longitude, char morada, float preco_dia_m2, int n_estudios
+        fwrite(&pe->edificio, sizeof(int), 1, fp);
+        size = strlen(pe->nome+1);
+        fwrite(&size, sizeof(size), 1, fp);
+        fwrite(pe->nome, sizeof(char), size, fp);
+        fwrite(&pe->latitude, sizeof(float), 1, fp);
+        fwrite(&pe->longitude, sizeof(float), 1, fp);
+        size = strlen(pe->morada+1);
+        fwrite(&size, sizeof(size), 1, fp);
+        fwrite(pe->morada, sizeof(char), size, fp);
+        fwrite(&pe->preco_dia_m2, sizeof(float), 1, fp);
+        fwrite(&pe->n_estudios, sizeof(int), 1, fp);
+        pe = pe->pnext;
+    }
+    fclose(fp);
+    printf("closing save_edificios_bin()\n");
+}
+
+void read_edificios_bin(LOTE_EDIFICIOS *lt, char filename[]) {
+    printf("opening read_edificios_bin()\n");
+    FILE *fp = NULL;
+    fp = fopen(filename, "rb");
+    if ( (fp = fopen(filename, "rb")) == NULL) {
+        printf("read_edificios_bin(): Erro na abertura do ficheiro %s\n", filename);
+        return;
+    }
+    int size = 0, numeroEdificos = 0;
+    fread(&size, sizeof(size), 1, fp);
+    fread(lt->nome, sizeof(char), size, fp);
+    fread(&numeroEdificos, sizeof(int), 1, fp);
+    EDIFICIOS *pe = lt->pedificios;
+    for (int i=0; i<numeroEdificos; i++) {
+        int edificio;
+        char nome [MAX200], morada[MAX200];
+        float longitude, latitude, preco_dia_m2;
+        fread(&edificio, sizeof(int), 1, fp);
+        fread(&size, sizeof(size), 1, fp);
+        if (size > MAX200) {
+            printf("Erro\n");
+            return;
+        }
+        fread(nome, sizeof(char), size, fp);
+        fread(&latitude, sizeof(float), 1, fp);
+        fread(&longitude, sizeof(float), 1, fp);
+        fread(&size, sizeof(size), 1, fp);
+        if (size > MAX200) {
+            printf("Erro\n");
+            return;
+        }
+        fread(morada, sizeof(char), size, fp);
+        fread(&longitude, sizeof(float), 1, fp);
+        fread(&preco_dia_m2, sizeof(int), 1, fp);
+        insert_edificio(lt, edificio, nome, longitude, latitude, morada, preco_dia_m2);
+    }
+    fclose(fp);
+    printf("closing read_edificios_bin()\n");
+}
+
 //-------------ESTUDIOS
 
 ESTUDIOS* find_estudios(LOTE_EDIFICIOS *lt, int numeroEstudio) {
@@ -264,6 +330,34 @@ void print_estudios (LOTE_EDIFICIOS *lt) {
     printf("end print_estudios()\n");
 } //A funcionar
 
+void save_estudios_bin (LOTE_EDIFICIOS lt, char filename[]) {
+    printf("opening save_estudios_bin()\n");
+    FILE *fp = NULL;
+    fp = fopen(filename, "wb");
+    if ( (fp = fopen(filename, "wb")) == NULL) {
+        printf("save_edificios_bin(): Erro na abertura do ficheiro %s\n", filename);
+        return;
+    }
+    //int estudio, int numero, int edificio, char configuracao, int area
+    EDIFICIOS *pe = lt.pedificios;
+    for (int i=0; i<lt.nEdificios; i++) {
+        int numeroEstudios = pe->n_estudios;
+        for (int j=0; j<numeroEstudios; j++) {
+            ESTUDIOS *pes = pe->estudios + j;
+            fwrite(&pes->estudio, sizeof(int), 1, fp);
+            fwrite(&pes->numero, sizeof(int), 1, fp);
+            fwrite(&pes->edificio, sizeof(int), 1, fp);
+            int size = strlen(pes->configuracao+1);
+            fwrite(&size, sizeof(size), 1, fp);
+            fwrite(pes->configuracao, sizeof(char), size, fp);
+            fwrite(&pes->area, sizeof(int), 1, fp);
+        }
+        pe = pe->pnext;
+    }
+    fclose(fp);
+    printf("closing read_estudios_bin()\n");
+}
+
 //------------POLITICAS
 
 void read_politicas_csv(ESTUDIO_POLITICAS *pl, char filename[]) {
@@ -324,12 +418,50 @@ void insert_politicas (ESTUDIO_POLITICAS *ep, char politica[], char plataforma[]
     printf("closing insert_politicas()\n");
 }
 
+//--------------HOSPEDES
+void insert_hospede (HOSPEDES *ph, int id, char nome[]) {
+    printf("opening insert_hospede()\n");
+
+    HOSPEDES *novo = (HOSPEDES *) malloc (sizeof (HOSPEDES));
+    novo->id = id;
+    strcpy(novo->nome, nome);
+    novo->pnext = NULL;
+
+    if (ph->numeroHospedes == 0) {
+        ph = novo;
+        ph->numeroHospedes++;
+    }
+
+    HOSPEDES *pcurrent = ph, *pant = NULL;
+    while (pcurrent != NULL) {
+        pant = pcurrent;
+        pcurrent = pcurrent->pnext;
+    }
+    pant->pnext = novo;
+    novo->pnext = pcurrent;
+    ph->numeroHospedes++;
+    printf("closing insert_hospede()\n");
+}
+
+HOSPEDES* find_hospede(HOSPEDES *ph, int idHospede) {
+    printf("opening find_hospede()\n");
+    while (ph != NULL) {
+        if (ph->id == idHospede) {
+            printf("find_hospede(): hospede encontrado\n");
+            return ph;
+        }
+        ph = ph->pnext;
+    }
+    printf("closing find_hospede()\n");
+    return NULL;
+}
 
 //-------------AGENDA
 
 
 
 //-------------DIA
+
 
 
 
@@ -434,7 +566,7 @@ void print_eventos (DIAS *d) {
     ev = d->evento;
     printf("ID\t\tTIPO\t\tDATA INICIO\t\tDATA FIM\t\tHOSPEDE\t\tESTUDIO\t\tPLATAFORMA\n");
     while (ev != NULL) {
-        printf("%d\t\t%s\t\t%s\t\t%s\t\t%d\t\t%f\t\t%s\n");
+        printf("%d\t\t%s\t\t%s\t\t%s\t\t%d\t\t%d\t\t%s\n", ev->id, ev->tipo, ev->data_inicio, ev->data_fim, ev->hospede, ev->estudio, ev->plataforma);
         ev = ev->nextEvento;
     }
     printf("closing print_eventos()\n");
