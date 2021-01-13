@@ -214,6 +214,21 @@ void insert_agenda (LOTE_EDIFICIOS *lt, int idEstudio, char nomeAgenda[]);
  */
 AGENDAS* find_agenda (LOTE_EDIFICIOS *lt, int idEstudio, char nomeAgenda[]);
 
+/**
+ * Função que lê um ficheiro de agenda em binario
+ * @param lt - lote de edificios
+ * @param filename - nome do ficheiro a ler
+ */
+void read_agenda_bin (LOTE_EDIFICIOS *lt, char filename[]);
+
+/**
+ * Função que guarda um ficheiro de agendas em binario
+ * @param lt - lote de edificios
+ * @param idEstudio - id do estudio
+ * @param filename - nome do ficheiro
+ */
+void save_agenda_bin (LOTE_EDIFICIOS lt, int idEstudio, char filename[]);
+
 //-------------------------DIA----------------------------------------------------------
 
 /**

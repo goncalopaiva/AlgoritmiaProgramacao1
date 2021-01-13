@@ -14,8 +14,6 @@ int main_projeto(){
     read_edificos_csv(&l1, "edificios.csv");
     read_estudios_csv(&l1, "estudios.csv");
 
-    relatorio_ecra(&l1);
-
 
     printf("end main_projeto()\n");
 }
