@@ -9,12 +9,12 @@
 int main_projeto(){
     printf("start main_projeto()\n");
 
-
     LOTE_EDIFICIOS l1 = {"Lote 1", NULL, 0};
 
     read_edificos_csv(&l1, "edificios.csv");
-    print_edificios(&l1);
-    save_edificios_bin(l1, "edificios.bin");
+    read_estudios_csv(&l1, "estudios.csv");
+
+    relatorio_ecra(&l1);
 
 
     printf("end main_projeto()\n");
@@ -218,6 +218,40 @@ void read_edificios_bin(LOTE_EDIFICIOS *lt, char filename[]) {
     printf("closing read_edificios_bin()\n");
 }
 
+void edit_edificios(LOTE_EDIFICIOS *lt, int numeroEdificio, char nome[MAX200], float latitude, float longitude, char morada[MAX200], float preco_dia_m2) {
+    EDIFICIOS *pe = find_edificios(lt, numeroEdificio);
+    strcpy(pe->nome, nome);
+    pe->latitude = latitude;
+    pe->longitude = longitude;
+    strcpy(pe->morada, morada);
+    pe->preco_dia_m2 = preco_dia_m2;
+}
+
+void remove_edificio(LOTE_EDIFICIOS *lt, int numeroEdificio) {
+    EDIFICIOS *pant, *pcur, *pnext;
+    pant = lt->pedificios;
+    pcur = pant->pnext;
+    pnext = pcur->pnext;
+
+    if (pant->edificio == numeroEdificio) {
+        lt->pedificios=pcur;
+        lt->nEdificios = (lt->nEdificios)-1;
+        return;
+    }
+
+    for (int i=0; i<lt->nEdificios; i++) {
+        if (pcur->edificio == numeroEdificio) {
+            pant->pnext = pnext;
+            lt->nEdificios = (lt->nEdificios)-1;
+            return;
+        }
+        pant = pcur;
+        pcur = pnext;
+        pnext = pnext->pnext;
+    }
+}
+
+
 //-------------ESTUDIOS
 
 ESTUDIOS* find_estudios(LOTE_EDIFICIOS *lt, int numeroEstudio) {
@@ -310,6 +344,7 @@ void insert_estudio(LOTE_EDIFICIOS *lt, int edificio, int estudio, int numero, c
     strcpy(pes->configuracao, configuracao);
     pes->area = area;
     pes->estudo_politicas = NULL;
+    pes->numAgendas = 0;
     pes->agendas = NULL;
     (pp->n_estudios)++;
 
@@ -356,6 +391,31 @@ void save_estudios_bin (LOTE_EDIFICIOS lt, char filename[]) {
     }
     fclose(fp);
     printf("closing read_estudios_bin()\n");
+}
+
+void edit_estudio (LOTE_EDIFICIOS *lt, int estudio, int numero, int edificio, char configurcao[MAX10], int area) {
+    ESTUDIOS *pe = find_estudios(lt, estudio);
+    pe->numero = numero;
+    pe->edificio = edificio;
+    strcpy(pe->configuracao, configurcao);
+    pe->area = area;
+}
+
+void remove_estudio (LOTE_EDIFICIOS *lt, int numEstudio) {
+    ESTUDIOS *pe = find_estudios(lt, numEstudio);
+    EDIFICIOS *ped = find_edificios(lt, pe->edificio);
+    for (int i=0; i<ped->n_estudios; i++) {
+        ESTUDIOS *e = ped->estudios + i;
+        if (e->estudio == numEstudio) {
+            for (int j=i; j<ped->n_estudios; j++) {
+
+                //estudio[j] = estudio[j+1];
+
+            }
+            ped->n_estudios--;
+            return;
+        }
+    }
 }
 
 //------------POLITICAS
@@ -418,6 +478,27 @@ void insert_politicas (ESTUDIO_POLITICAS *ep, char politica[], char plataforma[]
     printf("closing insert_politicas()\n");
 }
 
+POLITICAS* find_politicas(ESTUDIO_POLITICAS *ep, char politica[MAX200]) {
+    POLITICAS *pp = ep->politica;
+    int i=0;
+    while (pp->politica + i != 0) {
+        if ( strcmp(pp->politica, politica) ==0 ) {
+            return pp;
+        }
+        i++;
+    }
+}
+
+void remove_politicas() {
+
+
+}
+
+void edit_politicas() {
+
+
+}
+
 //--------------HOSPEDES
 void insert_hospede (HOSPEDES *ph, int id, char nome[]) {
     printf("opening insert_hospede()\n");
@@ -456,13 +537,130 @@ HOSPEDES* find_hospede(HOSPEDES *ph, int idHospede) {
     return NULL;
 }
 
+void edit_hospede(HOSPEDES *ph, int idHospede, char nome[MAX200]) {
+    HOSPEDES *pe = find_hospede(ph, idHospede);
+    strcpy(pe->nome, nome);
+}
+
+void remove_hospede(HOSPEDES *ph, int idHospede) {
+    HOSPEDES *pant, *pcur, *pnext;
+    pant = ph;
+    pcur = pant->pnext;
+    pnext = pcur->pnext;
+
+    if (pant->id == idHospede) {
+        ph = pcur;
+        ph->numeroHospedes--;
+        return;
+    }
+
+    for (int i=0; i<ph->numeroHospedes; i++) {
+        if (pcur->id == idHospede) {
+
+            ph->numeroHospedes--;
+            return;
+        }
+        pant = pcur;
+        pcur = pnext;
+        pnext = pnext->pnext;
+    }
+
+}
+
 //-------------AGENDA
+void insert_agenda (LOTE_EDIFICIOS *lt, int idEstudio, char nomeAgenda[]) {
+    ESTUDIOS *pe = NULL;
+    pe = find_estudios(lt, idEstudio);
+    int n = pe->numAgendas;
+    AGENDAS *pa = &pe->agendas[n];
+    strcpy(pa->agenda, nomeAgenda);
+    pe->numAgendas++;
+}
+
+AGENDAS * find_agenda (LOTE_EDIFICIOS *lt, int idEstudio, char nomeAgenda[]) {
+    ESTUDIOS *pe = find_estudios(lt, idEstudio);
+    int n = pe->numAgendas;
+    for (int i=0; i<n; i++) {
+        char agenda[MAX200];
+        strcpy(agenda, pe->agendas[n].agenda);
+        if ( strcmp(agenda, nomeAgenda) == 0) {
+            return &pe->agendas[n];
+        }
+    }
+    return NULL;
+}
+
+void read_agenda_bin (LOTE_EDIFICIOS *lt, char filename[]) {
+    printf("opening read_agenda_bin()\n");
+    FILE *fp = NULL;
+    fp = fopen(filename, "wb");
+    if ( (fp = fopen(filename, "wb")) == NULL) {
+        printf("save_agenda_bin(): Erro na abertura do ficheiro %s\n", filename);
+        return;
+    }
 
 
+
+    printf("closing read_agenda_bin()\n");
+}
+
+void save_agenda_bin (LOTE_EDIFICIOS lt, int idEstudio, char filename[]) {
+    printf("opening save_agenda_bin()\n");
+    FILE *fp = NULL;
+    fp = fopen(filename, "wb");
+    if ( (fp = fopen(filename, "wb")) == NULL) {
+        printf("save_agenda_bin(): Erro na abertura do ficheiro %s\n", filename);
+        return;
+    }
+    ESTUDIOS *pe = find_estudios(&lt, idEstudio);
+    for (int i=0; i<pe->numAgendas; i++) {
+        AGENDAS *pa = pe->agendas + i;
+        int size = strlen(pa->agenda+1);
+        fwrite(&size, sizeof(size), 1, fp);
+        fwrite(pa->agenda, sizeof(char), size, fp);
+        int j=0;
+        while (pa->dia+j != NULL) {
+            DIAS *pd = pa->dia+j;
+            size = strlen(pd->dia+1);
+            fwrite(&size, sizeof(size), 1, fp);
+            fwrite(pd->dia, sizeof(char), size, fp);
+            EVENTOS *pev = pd->evento;
+            for (int k=0; k<pd->nEventos; k++) {
+                fwrite(&pev->id, sizeof(int), 1, fp);
+                size = strlen(pev->tipo+1);
+                fwrite(&size, sizeof(size), 1, fp);
+                fwrite(pev->tipo, sizeof(char), size, fp);
+                size = strlen(pev->data_inicio+1);
+                fwrite(&size, sizeof(size), 1, fp);
+                fwrite(pev->data_inicio, sizeof(char), size, fp);
+                size = strlen(pev->data_fim+1);
+                fwrite(&size, sizeof(size), 1, fp);
+                fwrite(pev->data_fim, sizeof(char), size, fp);
+                fwrite(&pev->hospede, sizeof(int), 1, fp);
+                fwrite(&pev->estudio, sizeof(int), 1, fp);
+                size = strlen(pev->plataforma+1);
+                fwrite(&size, sizeof(size), 1, fp);
+                fwrite(pev->plataforma, sizeof(char), size, fp);
+                pev = pev->nextEvento;
+            }
+            j++;
+        }
+    }
+    printf("closing save_agenda_bin()\n");
+}
 
 //-------------DIA
 
-
+DIAS * find_dia (AGENDAS *pa, char dia[MAX10]) {
+    DIAS *pd = pa->dia;
+    int n = pd->nEventos;
+    for (int i=0; i<n; i++) {
+        if (strcmp(pa->dia[n]->dia, dia) == 0) {
+            return pa->dia[n];
+        }
+    }
+    return NULL;
+}
 
 
 //-------------EVENTO
@@ -572,3 +770,94 @@ void print_eventos (DIAS *d) {
     printf("closing print_eventos()\n");
 }
 
+EVENTOS * find_evento (DIAS *pd, int idEvento) {
+    EVENTOS *pe = pd->evento;
+    while (pe != NULL) {
+        if (idEvento == pe->id) {
+            return pe;
+        }
+        pe = pe->nextEvento;
+    }
+    return NULL;
+}
+
+void edit_evento (DIAS *pd, int idEvento, char tipo[MAX200], char data_inicio[], char data_fim[], int hospede, int estudio, char plataforma[]) {
+    EVENTOS *pe = find_evento(pd, idEvento);
+    if (pe == NULL) {
+        return;
+    }
+    strcpy(pe->tipo, tipo);
+    strcpy(pe->data_inicio, data_inicio);
+    strcpy(pe->data_fim, data_fim);
+    pe->hospede = hospede;
+    pe->estudio = estudio;
+    strcpy(pe->plataforma, plataforma);
+}
+
+void remove_evento (DIAS *pd, int idEvento) {
+    EVENTOS *pant, *pcur, *pnext;
+    pant = pd->evento;
+    pcur = pant->nextEvento;
+    pnext = pcur->nextEvento;
+
+    if (pant->id == idEvento) {
+        pd->evento=pcur;
+        pd->nEventos--;
+        return;
+    }
+
+    for (int i=0; i<pd->nEventos; i++) {
+        if (pcur->id == idEvento) {
+            pant->nextEvento = pnext;
+            pd->nEventos--;
+            return;
+        }
+        pant = pcur;
+        pcur = pnext;
+        pnext = pnext->nextEvento;
+    }
+}
+
+//--------------------
+
+void relatorio_ecra(LOTE_EDIFICIOS *lt) {
+    //POR LOTE
+    //POR EDIFICIO
+    //POR ESTUDIO
+    //->>eventos
+
+    for (int i=0; i<lt->nEdificios; i++) {
+        EDIFICIOS *pe = lt->pedificios;
+        printf("* Lote Edificios: %s\n", lt->nome);
+        while (pe != NULL) {
+            printf("\t** Edificio: %d - %s\n", pe->edificio, pe->nome);
+            printf("\t** Latitude: %f   Longitude: %f \n", pe->latitude, pe->longitude);
+            printf("\t** Morada: %s\n", pe->morada);
+            printf("\t** Numero estudios: %d\n", pe->n_estudios);
+            for (int j=0; j<pe->n_estudios; j++) {
+                ESTUDIOS *pes = pe->estudios+j;
+                printf("\t\t\t*** Estudio: %d  Numero: %d  Configuracao: %s  Area: %d\n", pes->estudio, pes->numero, pes->configuracao, pes->area);
+                for (int k=0; k<pes->numAgendas; k++) {
+                    AGENDAS *pa = pes->agendas+k;
+                    int m=0;
+                    DIAS *pd = pa->dia;
+                    while (pd != NULL) {
+
+                        EVENTOS *pev = pd->evento;
+                        for (int n=0; n<pd->nEventos; n++) {
+                            printf("\t\t\t**** ID: %d  Tipo: %s  Inicio: %s  Fim: %s  Hospede: %d  Plataforma: %s \n", pev->id, pev->tipo, pev->data_inicio, pev->data_fim, pev->hospede, pev->plataforma);
+                            pev=pev->nextEvento;
+                        }
+                        m++;
+                        pd = (pa->dia + m);
+                    }
+                }
+
+
+            }
+
+            pe = pe->pnext;
+        }
+    }
+
+}

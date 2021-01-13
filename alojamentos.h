@@ -34,8 +34,8 @@ typedef struct estudio_politica {
 typedef struct evento {
     int id;
     char tipo[MAX200];
-    char data_inicio[MAX10]; //Mudar para data idk
-    char data_fim[MAX10]; //Mudar para data idk
+    char data_inicio[MAX10];
+    char data_fim[MAX10];
     int hospede;
     int estudio;
     char plataforma[MAX200];
@@ -50,7 +50,7 @@ typedef struct dia {
 
 typedef struct agendas {
     char agenda[MAX200];
-    DIAS *dia;
+    DIAS *dia[];
 } AGENDAS;
 
 typedef struct estudio {
@@ -59,6 +59,7 @@ typedef struct estudio {
     int edificio;
     char configuracao[MAX10];
     int area;
+    int numAgendas;
     AGENDAS *agendas;
     ESTUDIO_POLITICAS *estudo_politicas;
 } ESTUDIOS;
@@ -80,7 +81,6 @@ typedef struct lote_edificios {
     EDIFICIOS *pedificios;
     int nEdificios;
 } LOTE_EDIFICIOS;
-
 
 
 int main_projeto();
@@ -135,6 +135,25 @@ void save_edificios_bin (LOTE_EDIFICIOS lt, char filename[]);
  */
 void read_edificios_bin(LOTE_EDIFICIOS *lt, char filename[]);
 
+/**
+ * Função que edita um edificio
+ * @param lt - lote edificios
+ * @param numeroEdificio - numero do edificio
+ * @param nome - novo nome do edificio
+ * @param latitude - nova latitude do eficio
+ * @param longitude - nova longitude do edificio
+ * @param morada - nova morada do edificio
+ * @param preco_dia_m2 - novo preco/dia/m2 do edificio
+ */
+void edit_edificios(LOTE_EDIFICIOS *lt, int numeroEdificio, char nome[MAX200], float latitude, float longitude, char morada[MAX200], float preco_dia_m2);
+
+/**
+ * Função que remove um edificio
+ * @param lt - lote de edificio
+ * @param numeroEdificio - numero do edificio
+ */
+void remove_edificio(LOTE_EDIFICIOS *lt, int numeroEdificio);
+
 //--------------------------ESTUDIOS--------------------------------------------------
 
 /**
@@ -178,21 +197,98 @@ void save_estudios_bin (LOTE_EDIFICIOS lt, char filename[]);
 
 //-----------------------AGENDA----------------------------------------------------------
 
+/**
+ * Função que insere uma nova agenda
+ * @param lt - lote edificio
+ * @param idEstudio - id do novo estudio
+ * @param nomeAgenda - nome da nova agenda
+ */
+void insert_agenda (LOTE_EDIFICIOS *lt, int idEstudio, char nomeAgenda[]);
+
+/**
+ * Função que procura uma agenda
+ * @param lt - lote de edificios
+ * @param idEstudio - id do estudio a procurar
+ * @param nomeAgenda - nome da agenda a procurar
+ * @return AGENDAS
+ */
+AGENDAS* find_agenda (LOTE_EDIFICIOS *lt, int idEstudio, char nomeAgenda[]);
 
 //-------------------------DIA----------------------------------------------------------
 
+/**
+ * Função que procura um dia
+ * @param pa - pointer agenda
+ * @param dia - dia a procurar
+ * @return DIAS
+ */
+DIAS* find_dia (AGENDAS *pa, char dia[MAX10]);
 
 //-----------------------EVENTOS---------------------------------------------------------
 
+/**
+ * Função que lê um ficheiro csv de eventos
+ * @param dt - pointer dias
+ * @param filename - nome do ficheiro
+ */
 void read_eventos_csv (DIAS *dt, char filename[]);
 
+/**
+ * Função que insere um evento
+ * @param d - pointer dia
+ * @param id - id evento a inserir
+ * @param tipo - tipo evento a inserir
+ * @param data_inicio - data de inicio do evento a inserir
+ * @param data_fim - data de fim do evento a inserir
+ * @param hospede
+ * @param estudio
+ * @param plataforma
+ */
 void insert_evento(DIAS *d, int id, const char *tipo, const char *data_inicio, const char *data_fim, int hospede, int estudio, const char *plataforma);
 
+/**
+ * Função que imprime no ecra os eventos de um dia
+ * @param d - pointer dia
+ */
 void print_eventos (DIAS *d);
+
+/**
+ * Função que procura um evento num determinado dia
+ * @param pd - pointer dia
+ * @param idEvento - id do evento a procurar
+ * @return EVENTOS
+ */
+EVENTOS * find_evento (DIAS *pd, int idEvento);
+
+/**
+ * Função para editar um evento
+ * @param pd - pointer dia
+ * @param idEvento - id do evento a editar
+ * @param tipo - novo tipo do evento
+ * @param data_inicio - nova data incio
+ * @param data_fim - nova data fim
+ * @param hospede
+ * @param estudio
+ * @param plataforma
+ */
+void edit_evento (DIAS *pd, int idEvento, char tipo[MAX200], char data_inicio[], char data_fim[], int hospede, int estudio, char plataforma[]);
+
+/**
+ * Função que remove um evento
+ * @param pd - pointer dia
+ * @param idEvento - id do evento a remover
+ */
+void remove_evento (DIAS *pd, int idEvento);
 
 //-------------------POLITICAS-----------------------------------------------------------
 
-
+/**
+ * Função que insere politicas
+ * @param ep - pointer ESTUDIO_POLTICAS
+ * @param politica - politica a adicionar
+ * @param plataforma - plataforma a adicionar
+ * @param regras - regras a adicionar
+ */
 void insert_politicas (ESTUDIO_POLITICAS *ep, char politica[], char plataforma[], char regras[]);
 
 
@@ -214,6 +310,23 @@ void insert_hospede (HOSPEDES *ph, int id, char nome[]);
  */
 HOSPEDES* find_hospede(HOSPEDES *ph, int idHospede);
 
+/**
+ * Função para editar hospedes
+ * @param ph - pointer da lista ligada de hospedes
+ * @param idHospede - id do hospede a editar
+ * @param nome - novo nome hospede
+ */
+void edit_hospede(HOSPEDES *ph, int idHospede, char nome[MAX200]);
 
+/**
+ * Função que remove um hospede
+ * @param ph - pointer da lista ligada de hospedes
+ * @param idHospede - id do hospede a eliminar
+ */
+void remove_hospede(HOSPEDES *ph, int idHospede);
+
+//--------------------
+
+void relatorio_ecra(LOTE_EDIFICIOS *lt);
 
 #endif //PROJETOLPIAEDI_ALOJAMENTOS_H

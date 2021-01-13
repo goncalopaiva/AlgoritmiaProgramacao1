@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['lote_5fedificios_15',['lote_edificios',['../structlote__edificios.html',1,'']]]
+  ['hospede_16',['hospede',['../structhospede.html',1,'']]]
 ];

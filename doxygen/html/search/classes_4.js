@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['politica_16',['politica',['../structpolitica.html',1,'']]]
+  ['lote_5fedificios_17',['lote_edificios',['../structlote__edificios.html',1,'']]]
 ];
