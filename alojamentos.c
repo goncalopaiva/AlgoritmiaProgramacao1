@@ -12,8 +12,20 @@ int main_projeto(){
     LOTE_EDIFICIOS l1 = {"Lote 1", NULL, 0};
 
     read_edificos_csv(&l1, "edificios.csv");
-    read_estudios_csv(&l1, "estudios.csv");
+    print_edificios(&l1);
 
+    read_estudios_csv(&l1,"estudios.csv");
+    print_estudios(&l1);
+
+    read_eventos_csv(&l1, "eventos_novo.csv");
+
+    print_eventos(&l1);
+
+    relatorio_ecra(&l1);
+
+    relatorio_ficheiro(&l1, "relatorio.csv");
+
+    save_agenda_bin(l1, "agenda_eventos.bin");
 
     printf("end main_projeto()\n");
 }
@@ -46,7 +58,7 @@ void insert_edificio(LOTE_EDIFICIOS *pl, int edificio, const char *nome, float l
     strcpy(novo->morada, morada);
     novo->preco_dia_m2 = preco_dia_m2;
     novo->n_estudios=0;
-    novo->estudios = calloc (1, sizeof(ESTUDIOS));
+    novo->estudios = calloc (MAXESTUDIOS, sizeof(ESTUDIOS));
     novo->pnext = NULL;
 
     if (pl->pedificios == NULL || pl->nEdificios == 0) {
@@ -249,7 +261,6 @@ void remove_edificio(LOTE_EDIFICIOS *lt, int numeroEdificio) {
     }
 }
 
-
 //-------------ESTUDIOS
 
 ESTUDIOS* find_estudios(LOTE_EDIFICIOS *lt, int numeroEstudio) {
@@ -343,7 +354,7 @@ void insert_estudio(LOTE_EDIFICIOS *lt, int edificio, int estudio, int numero, c
     pes->area = area;
     pes->estudo_politicas = NULL;
     pes->numAgendas = 0;
-    pes->agendas = NULL;
+    pes->agendas = calloc (MAXAGENDAS, sizeof(AGENDAS));
     (pp->n_estudios)++;
 
     //printf("closing insert_estudio()\n");
@@ -415,6 +426,10 @@ void remove_estudio (LOTE_EDIFICIOS *lt, int numEstudio) {
         }
     }
 }
+
+//------------ESTUDIO POLITICAS
+
+
 
 //------------POLITICAS
 
@@ -567,24 +582,26 @@ void remove_hospede(HOSPEDES *ph, int idHospede) {
 
 //-------------AGENDA
 void insert_agenda (LOTE_EDIFICIOS *lt, int idEstudio, char nomeAgenda[]) {
+    printf("opening insert_agenda()\n");
     ESTUDIOS *pe = NULL;
     pe = find_estudios(lt, idEstudio);
-    int n = pe->numAgendas;
-    AGENDAS *pa = &pe->agendas[n];
+    AGENDAS *pa = (pe->agendas) + pe->numAgendas;
     strcpy(pa->agenda, nomeAgenda);
-    pe->numAgendas++;
+    pa->numDias=0;
+    pa->dia = calloc (MAXDIAS, sizeof(DIAS));
+    (pe->numAgendas)++;
+    printf("closing insert_agenda()\n");
 }
 
 AGENDAS * find_agenda (LOTE_EDIFICIOS *lt, int idEstudio, char nomeAgenda[]) {
     ESTUDIOS *pe = find_estudios(lt, idEstudio);
-    int n = pe->numAgendas;
-    for (int i=0; i<n; i++) {
-        char agenda[MAX200];
-        strcpy(agenda, pe->agendas[n].agenda);
-        if ( strcmp(agenda, nomeAgenda) == 0) {
-            return &pe->agendas[n];
+    for (int i=0; i<pe->numAgendas; i++) {
+        AGENDAS *pa = (pe->agendas)+i;
+        if (strcmp(pa->agenda, nomeAgenda) == 0) {
+            return pa;
         }
     }
+    printf("find_agenda(): Agenda nao encontrada\n");
     return NULL;
 }
 
@@ -602,7 +619,7 @@ void read_agenda_bin (LOTE_EDIFICIOS *lt, char filename[]) {
     printf("closing read_agenda_bin()\n");
 }
 
-void save_agenda_bin (LOTE_EDIFICIOS lt, int idEstudio, char filename[]) {
+void save_agenda_bin (LOTE_EDIFICIOS lt, char filename[]) {
     printf("opening save_agenda_bin()\n");
     FILE *fp = NULL;
     fp = fopen(filename, "wb");
@@ -610,61 +627,89 @@ void save_agenda_bin (LOTE_EDIFICIOS lt, int idEstudio, char filename[]) {
         printf("save_agenda_bin(): Erro na abertura do ficheiro %s\n", filename);
         return;
     }
-    ESTUDIOS *pe = find_estudios(&lt, idEstudio);
-    for (int i=0; i<pe->numAgendas; i++) {
-        AGENDAS *pa = pe->agendas + i;
-        int size = strlen(pa->agenda+1);
-        fwrite(&size, sizeof(size), 1, fp);
-        fwrite(pa->agenda, sizeof(char), size, fp);
-        int j=0;
-        while (pa->dia+j != NULL) {
-            DIAS *pd = pa->dia+j;
-            size = strlen(pd->dia+1);
-            fwrite(&size, sizeof(size), 1, fp);
-            fwrite(pd->dia, sizeof(char), size, fp);
-            EVENTOS *pev = pd->evento;
-            for (int k=0; k<pd->nEventos; k++) {
-                fwrite(&pev->id, sizeof(int), 1, fp);
-                size = strlen(pev->tipo+1);
-                fwrite(&size, sizeof(size), 1, fp);
-                fwrite(pev->tipo, sizeof(char), size, fp);
-                size = strlen(pev->data_inicio+1);
-                fwrite(&size, sizeof(size), 1, fp);
-                fwrite(pev->data_inicio, sizeof(char), size, fp);
-                size = strlen(pev->data_fim+1);
-                fwrite(&size, sizeof(size), 1, fp);
-                fwrite(pev->data_fim, sizeof(char), size, fp);
-                fwrite(&pev->hospede, sizeof(int), 1, fp);
-                fwrite(&pev->estudio, sizeof(int), 1, fp);
-                size = strlen(pev->plataforma+1);
-                fwrite(&size, sizeof(size), 1, fp);
-                fwrite(pev->plataforma, sizeof(char), size, fp);
-                pev = pev->nextEvento;
+
+    EDIFICIOS *pedificios = lt.pedificios;
+    while (pedificios != NULL) {
+        for (int i=0; i<pedificios->n_estudios; i++) {
+            ESTUDIOS *pestudios = pedificios->estudios+i;
+            for (int j=0; j<pestudios->numAgendas; j++) {
+                AGENDAS *pagendas = pestudios->agendas+j;
+                for (int k=0; k<pagendas->numDias; k++) {
+                    DIAS *pdias = pagendas->dia+k;
+                    EVENTOS *pevento = pdias->evento;
+                    while (pevento != NULL) {
+
+                        fwrite(&pevento->id, sizeof(int), 1, fp);
+
+                        int size = strlen(pevento->tipo+1);
+                        fwrite(&size, sizeof(size), 1, fp);
+                        fwrite(pevento->tipo, sizeof(char), size, fp);
+
+                        size = strlen(pevento->data_inicio+1);
+                        fwrite(&size, sizeof(size), 1, fp);
+                        fwrite(pevento->data_inicio, sizeof(char), size, fp);
+
+                        size = strlen(pevento->data_fim+1);
+                        fwrite(&size, sizeof(size), 1, fp);
+                        fwrite(pevento->data_fim, sizeof(char), size, fp);
+
+                        fwrite(&pevento->hospede, sizeof(int), 1, fp);
+                        fwrite(&pevento->estudio, sizeof(int), 1, fp);
+
+                        size = strlen(pevento->plataforma+1);
+                        fwrite(&size, sizeof(size), 1, fp);
+                        fwrite(pevento->plataforma, sizeof(char), size, fp);
+
+                        pevento=pevento->nextEvento;
+                    }
+                }
             }
-            j++;
         }
+
+        pedificios=pedificios->pnext;
     }
+
+    fclose(fp);
+
     printf("closing save_agenda_bin()\n");
 }
 
 //-------------DIA
 
+void insert_dia (AGENDAS *pa, char dia[MAX10]) {
+    DIAS *pd = pa->dia + pa->numDias;
+    strcpy(pd->dia, dia);
+    //pd->evento = (EVENTOS *) malloc (sizeof(EVENTOS));
+    pd->evento = calloc (MAXEVENTOS, sizeof(EVENTOS));
+    pd->nEventos=0;
+    (pa->numDias)++;
+}
+
 DIAS * find_dia (AGENDAS *pa, char dia[MAX10]) {
-    DIAS *pd = pa->dia;
-    int n = pd->nEventos;
-    for (int i=0; i<n; i++) {
-        if (strcmp(pa->dia[n]->dia, dia) == 0) {
-            return pa->dia[n];
+    for (int i=0; i<pa->numDias; i++) {
+        DIAS *pd = (pa->dia)+i;
+        if (strcmp(dia, pd->dia) == 0) {
+            return pd;
         }
     }
     return NULL;
 }
 
-
 //-------------EVENTO
 
-void insert_evento(DIAS *d, int id, const char *tipo, const char *data_inicio, const char *data_fim, int hospede, int estudio, const char *plataforma) {
+void insert_evento(LOTE_EDIFICIOS *lt, int id, char tipo[], char data_inicio[], char data_fim[], int hospede, int estudio, char plataforma[]) {
     printf("opening insert_evento()\n");
+
+    AGENDAS *pa = find_agenda(lt,estudio,plataforma);
+    if (pa == NULL) {
+        insert_agenda(lt, estudio, plataforma);
+        pa = find_agenda(lt, estudio, plataforma);
+    }
+    DIAS *pd = find_dia(pa,data_inicio);
+    if (pd == NULL) {
+        insert_dia(pa,data_inicio);
+        pd = find_dia(pa,data_inicio);
+    }
 
     EVENTOS *novo = (EVENTOS *) malloc (sizeof(EVENTOS));
     novo->id = id;
@@ -676,45 +721,45 @@ void insert_evento(DIAS *d, int id, const char *tipo, const char *data_inicio, c
     strcpy(novo->plataforma, plataforma);
     novo->nextEvento = NULL;
 
-    if (d->evento == NULL || d->nEventos == 0) {
-        d->evento = novo;
-        d->nEventos++;
+    if (pd->evento == NULL || pd->nEventos == 0) {
+        pd->evento = novo;
+        pd->nEventos++;
     }
-    EVENTOS *pcurrent = d->evento, *pant = NULL;
+    EVENTOS *pcurrent = pd->evento, *pant = NULL;
     while (pcurrent != NULL) {
         pant = pcurrent;
         pcurrent = pcurrent->nextEvento;
     }
-    if (pcurrent == d->evento) {
+    if (pcurrent == pd->evento) {
         novo->nextEvento = pcurrent;
-        d->evento = novo;
-        d->nEventos++;
+        pd->evento = novo;
+        pd->nEventos++;
         return;
     }
     pant->nextEvento = novo;
     novo->nextEvento = pcurrent;
-    d->nEventos++;
-    printf("closing insert_evento()");
+    pd->nEventos++;
+    printf("closing insert_evento()\n");
 } //Verificar se funciona
 
-void read_eventos_csv (DIAS *dt, char filename[]) {
+void read_eventos_csv (LOTE_EDIFICIOS *lt, char filename[]) {
     //id,tipo,data_inicio,data_fim,hospede,estudio,plataforma
     printf("opening read_eventos_csv()\n");
     FILE *fp = NULL;
     fp = fopen(filename, "r");
-    if ( (fp = fopen(filename, "r")) == NULL) {
-        printf("read_eventos_csv(): Falha na abertura do ficheiro %s\n",filename);
+    if ((fp = fopen(filename, "r")) == NULL) {
+        printf("read_eventos_csv(): Falha na abertura do ficheiro %s\n", filename);
         return;
     }
 
     int id, hospede, estudio;
-    char tipo[MAX200], data_inicio[MAX200], data_fim[MAX200], plataforma[MAX200];
+    char tipo[MAX200], data_inicio[MAX10], data_fim[MAX10], plataforma[MAX200];
 
     char buff[1024];
     int row_count = 0;
     int field_count = 0;
 
-    while(fgets(buff, 1024, fp)) {
+    while (fgets(buff, 1024, fp)) {
 
         field_count = 0;
         row_count++;
@@ -748,24 +793,39 @@ void read_eventos_csv (DIAS *dt, char filename[]) {
             field = strtok(NULL, ",");
             field_count++;
         }
-        printf("%d, %s, %s, %s, %d, %d, %s \n",id, tipo, data_inicio, data_fim, hospede, estudio, plataforma);
-        insert_evento(dt, id, tipo, data_inicio, data_fim, hospede, estudio, plataforma);
+        printf("%d, %s, %s, %s, %d, %d, %s \n", id, tipo, data_inicio, data_fim, hospede, estudio, plataforma);
+        insert_evento(lt, id, tipo, data_inicio, data_fim, hospede, estudio, plataforma);
     }
 
     fclose(fp);
     printf("closing read_eventos_csv()\n");
-} //Terminar. Receber DIA ou entao mudar insert_eventos
+}
 
-void print_eventos (DIAS *d) {
+void print_eventos (LOTE_EDIFICIOS *lt) {
     printf("opening print_eventos()\n");
-    EVENTOS *ev = NULL;
-    ev = d->evento;
-    printf("ID\t\tTIPO\t\tDATA INICIO\t\tDATA FIM\t\tHOSPEDE\t\tESTUDIO\t\tPLATAFORMA\n");
-    while (ev != NULL) {
-        printf("%d\t\t%s\t\t%s\t\t%s\t\t%d\t\t%d\t\t%s\n", ev->id, ev->tipo, ev->data_inicio, ev->data_fim, ev->hospede, ev->estudio, ev->plataforma);
-        ev = ev->nextEvento;
+
+    printf("ID\tTIPO\t\tDATA INICIO\tDATA FIM\tHOSPEDE\t\tESTUDIO\t\tPLATAFORMA\n");
+
+    EDIFICIOS *pe = lt->pedificios;
+    while (pe != NULL) {
+        for (int i=0; i<pe->n_estudios; i++) {
+            ESTUDIOS *pestudio = (pe->estudios)+i;
+            for (int j=0; j<pestudio->numAgendas; j++) {
+                AGENDAS *pa = (pestudio->agendas)+j;
+                for (int k=0; k<pa->numDias; k++) {
+                    DIAS *pd = pa->dia+k;
+                    EVENTOS *pev = pd->evento;
+                    while (pev != NULL) {
+                        printf("%d\t%s\t\t%s\t%s\t%d\t\t%d\t\t%s",pev->id, pev->tipo, pev->data_inicio, pev->data_fim, pev->hospede, pev->estudio, pev->plataforma);
+                        pev = pev->nextEvento;
+                    }
+                }
+            }
+        }
+        pe = pe->pnext;
     }
-    printf("closing print_eventos()\n");
+
+    printf("\n");
 }
 
 EVENTOS * find_evento (DIAS *pd, int idEvento) {
@@ -816,46 +876,73 @@ void remove_evento (DIAS *pd, int idEvento) {
     }
 }
 
-//--------------------
+//---------------RELATÓRIOS
 
 void relatorio_ecra(LOTE_EDIFICIOS *lt) {
-    //POR LOTE
-    //POR EDIFICIO
-    //POR ESTUDIO
-    //->>eventos
+   printf("******************** RELATORIO ********************\n");
 
-    for (int i=0; i<lt->nEdificios; i++) {
-        EDIFICIOS *pe = lt->pedificios;
-        printf("* Lote Edificios: %s\n", lt->nome);
-        while (pe != NULL) {
-            printf("\t** Edificio: %d - %s\n", pe->edificio, pe->nome);
-            printf("\t** Latitude: %f   Longitude: %f \n", pe->latitude, pe->longitude);
-            printf("\t** Morada: %s\n", pe->morada);
-            printf("\t** Numero estudios: %d\n", pe->n_estudios);
-            for (int j=0; j<pe->n_estudios; j++) {
-                ESTUDIOS *pes = pe->estudios+j;
-                printf("\t\t\t*** Estudio: %d  Numero: %d  Configuracao: %s  Area: %d\n", pes->estudio, pes->numero, pes->configuracao, pes->area);
-                for (int k=0; k<pes->numAgendas; k++) {
-                    AGENDAS *pa = pes->agendas+k;
-                    int m=0;
-                    DIAS *pd = pa->dia;
-                    while (pd != NULL) {
-
-                        EVENTOS *pev = pd->evento;
-                        for (int n=0; n<pd->nEventos; n++) {
-                            printf("\t\t\t**** ID: %d  Tipo: %s  Inicio: %s  Fim: %s  Hospede: %d  Plataforma: %s \n", pev->id, pev->tipo, pev->data_inicio, pev->data_fim, pev->hospede, pev->plataforma);
-                            pev=pev->nextEvento;
-                        }
-                        m++;
-                        pd = (pa->dia + m);
+    EDIFICIOS *pedificios = lt->pedificios;
+    while (pedificios != NULL) {
+        printf("\n\t* EDIFICIO %d - %s\n",pedificios->edificio, pedificios->nome);
+        printf("\t* %s (%f, %f)\n", pedificios->morada, pedificios->latitude, pedificios->longitude);
+        printf("\t* %0.2f EUR/dia/m^2 com %d estudios\n", pedificios->preco_dia_m2, pedificios->n_estudios);
+        for (int i=0; i<pedificios->n_estudios; i++) {
+            ESTUDIOS *pestudios = pedificios->estudios+i;
+            int numeroEventos=0;
+            printf("\t\t** ESTUDIO: %d - N.%d - %s - %d m^2\n", pestudios->estudio, pestudios->numero, pestudios->configuracao, pestudios->area);
+            for (int j=0; j<pestudios->numAgendas; j++) {
+                AGENDAS *pagenda = pestudios->agendas+j;
+                for (int k=0; k<pagenda->numDias; k++) {
+                    DIAS *pdias = pagenda->dia+k;
+                    printf("\t\t*** %d evento(s)\n", pdias->nEventos-1);
+                    EVENTOS *peventos = pdias->evento;
+                    while (peventos != NULL) {
+                        printf("\t\t\t**** ID: %d - TIPO: %s\tDE %s A %s\tHOSPEDE: %d\tPLAT.: %s\n",peventos->id, peventos->tipo, peventos->data_inicio, peventos->data_fim, peventos->hospede, strtok(peventos->plataforma,"\n"));
+                        numeroEventos++;
+                        peventos=peventos->nextEvento;
                     }
                 }
-
-
             }
-
-            pe = pe->pnext;
         }
+        pedificios = pedificios->pnext;
+    }
+}
+
+void relatorio_ficheiro(LOTE_EDIFICIOS *lt, char filename[]) {
+    FILE *fp = fopen(filename, "w");
+    if (fp == NULL) {
+        printf("Impossivel abrir o ficheiro.\n");
+        return;
     }
 
+    EDIFICIOS *pedificios = lt->pedificios;
+    while (pedificios != NULL) {
+        fprintf(fp,"\n\t* EDIFICIO %d - %s\n",pedificios->edificio, pedificios->nome);
+        fprintf(fp,"\t* %s (%f, %f)\n", pedificios->morada, pedificios->latitude, pedificios->longitude);
+        fprintf(fp,"\t* %0.2f EUR/dia/m^2 com %d estudios\n", pedificios->preco_dia_m2, pedificios->n_estudios);
+        for (int i=0; i<pedificios->n_estudios; i++) {
+            ESTUDIOS *pestudios = pedificios->estudios+i;
+            int numeroEventos=0;
+            fprintf(fp,"\t\t** ESTUDIO: %d - N.%d - %s - %d m^2\n", pestudios->estudio, pestudios->numero, pestudios->configuracao, pestudios->area);
+            for (int j=0; j<pestudios->numAgendas; j++) {
+                AGENDAS *pagenda = pestudios->agendas+j;
+                for (int k=0; k<pagenda->numDias; k++) {
+                    DIAS *pdias = pagenda->dia+k;
+                    fprintf(fp,"\t\t*** %d evento(s)\n", pdias->nEventos-1);
+                    EVENTOS *peventos = pdias->evento;
+                    while (peventos != NULL) {
+                        fprintf(fp,"\t\t\t**** ID: %d - TIPO: %s\tDE %s A %s\tHOSPEDE: %d\tPLAT.: %s\n",peventos->id, peventos->tipo, peventos->data_inicio, peventos->data_fim, peventos->hospede, strtok(peventos->plataforma,"\n"));
+                        numeroEventos++;
+                        peventos=peventos->nextEvento;
+                    }
+                }
+            }
+        }
+        pedificios = pedificios->pnext;
+    }
+
+    fclose(fp);
+
+
 }
+

@@ -1,0 +1,5 @@
+id,tipo,data_inicio,data_fim,hospede,estudio,plataforma
+1,estadia,2020-09-25,2020-09-28,3,5,AirBnC
+2,limpeza,2020-09-24,2020-09-24,-1,5,-1
+3,estadia,2020-10-12,2020-10-22,5,17,AirBnE
+4,limpeza,2020-10-11,2020-10-11,-1,17,-1

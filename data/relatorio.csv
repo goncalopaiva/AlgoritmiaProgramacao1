@@ -1,0 +1,75 @@
+
+	* EDIFICIO 1 - PF Boavista
+	* Avenida da Boavista (41.162392, -8.655714)
+	* 1.50 EUR/dia/m^2 com 13 estudios
+		** ESTUDIO: 1 - N.1 - T2 - 60 m^2
+		** ESTUDIO: 2 - N.2 - T1 - 42 m^2
+		** ESTUDIO: 4 - N.3 - T3 - 102 m^2
+		** ESTUDIO: 5 - N.4 - T0 - 35 m^2
+		*** 1 evento(s)
+			**** ID: 1 - TIPO: estadia	DE 2020-09-25 A 2020-09-28	HOSPEDE: 3	PLAT.: AirBnC
+		*** 1 evento(s)
+			**** ID: 2 - TIPO: limpeza	DE 2020-09-24 A 2020-09-24	HOSPEDE: -1	PLAT.: -1
+		** ESTUDIO: 14 - N.5 - T1 - 49 m^2
+		** ESTUDIO: 17 - N.6 - T2 - 83 m^2
+		*** 1 evento(s)
+			**** ID: 3 - TIPO: estadia	DE 2020-10-12 A 2020-10-22	HOSPEDE: 5	PLAT.: AirBnE
+		*** 1 evento(s)
+			**** ID: 4 - TIPO: limpeza	DE 2020-10-11 A 2020-10-11	HOSPEDE: -1	PLAT.: -1
+		** ESTUDIO: 22 - N.7 - T1 - 49 m^2
+		** ESTUDIO: 23 - N.8 - T1 - 49 m^2
+		** ESTUDIO: 30 - N.9 - T2 - 83 m^2
+		** ESTUDIO: 35 - N.10 - T2 - 83 m^2
+		** ESTUDIO: 38 - N.11 - T1 - 49 m^2
+		** ESTUDIO: 44 - N.12 - T2 - 83 m^2
+		** ESTUDIO: 45 - N.13 - T1 - 49 m^2
+
+	* EDIFICIO 2 - PF Riberia
+	* Cais da Ribeira (41.140415, -8.612434)
+	* 1.80 EUR/dia/m^2 com 16 estudios
+		** ESTUDIO: 9 - N.2 - T3 - 122 m^2
+		** ESTUDIO: 8 - N.1 - T2 - 59 m^2
+		** ESTUDIO: 9 - N.2 - T3 - 122 m^2
+		** ESTUDIO: 10 - N.3 - T2 - 95 m^2
+		** ESTUDIO: 13 - N.4 - T0 - 47 m^2
+		** ESTUDIO: 15 - N.5 - T3 - 122 m^2
+		** ESTUDIO: 18 - N.6 - T2 - 95 m^2
+		** ESTUDIO: 19 - N.7 - T1 - 68 m^2
+		** ESTUDIO: 20 - N.8 - T2 - 95 m^2
+		** ESTUDIO: 29 - N.9 - T3 - 122 m^2
+		** ESTUDIO: 32 - N.10 - T1 - 68 m^2
+		** ESTUDIO: 33 - N.11 - T2 - 95 m^2
+		** ESTUDIO: 42 - N.12 - T3 - 122 m^2
+		** ESTUDIO: 46 - N.13 - T1 - 68 m^2
+		** ESTUDIO: 48 - N.14 - T1 - 68 m^2
+		** ESTUDIO: 49 - N.15 - T3 - 122 m^2
+
+	* EDIFICIO 3 - PF Norte
+	* Rua do Norte (41.150002, -8.610240)
+	* 1.30 EUR/dia/m^2 com 14 estudios
+		** ESTUDIO: 3 - N.1 - T2 - 60 m^2
+		** ESTUDIO: 6 - N.2 - T0 - 34 m^2
+		** ESTUDIO: 7 - N.3 - T1 - 41 m^2
+		** ESTUDIO: 11 - N.4 - T2 - 79 m^2
+		** ESTUDIO: 12 - N.5 - T1 - 49 m^2
+		** ESTUDIO: 21 - N.6 - T0 - 41 m^2
+		** ESTUDIO: 27 - N.7 - T1 - 56 m^2
+		** ESTUDIO: 28 - N.8 - T0 - 36 m^2
+		** ESTUDIO: 31 - N.9 - T1 - 56 m^2
+		** ESTUDIO: 39 - N.10 - T0 - 36 m^2
+		** ESTUDIO: 40 - N.11 - T1 - 63 m^2
+		** ESTUDIO: 41 - N.12 - T2 - 79 m^2
+		** ESTUDIO: 43 - N.13 - T2 - 79 m^2
+		** ESTUDIO: 47 - N.14 - T0 - 41 m^2
+
+	* EDIFICIO 4 - PF Santa Catarina
+	* Rua Santa Catarina (41.146381, -8.607050)
+	* 1.70 EUR/dia/m^2 com 8 estudios
+		** ESTUDIO: 16 - N.1 - T0 - 38 m^2
+		** ESTUDIO: 24 - N.2 - T1 - 57 m^2
+		** ESTUDIO: 25 - N.3 - T2 - 72 m^2
+		** ESTUDIO: 26 - N.4 - T1 - 57 m^2
+		** ESTUDIO: 34 - N.5 - T3 - 91 m^2
+		** ESTUDIO: 36 - N.6 - T2 - 72 m^2
+		** ESTUDIO: 37 - N.7 - T2 - 72 m^2
+		** ESTUDIO: 50 - N.8 - T2 - 72 m^2

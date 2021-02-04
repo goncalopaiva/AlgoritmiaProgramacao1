@@ -9,8 +9,14 @@
 #include <string.h>
 #include <stdlib.h>
 
+#define MAXEDIFICIOS 20
+#define MAXESTUDIOS 200
+#define MAXAGENDAS 200
+#define MAXEVENTOS 500
+#define MAXDIAS 100
+
 #define MAX200 200
-#define MAX10 10
+#define MAX10 12
 
 typedef struct hospede {
     int id;
@@ -28,7 +34,7 @@ typedef struct politica {
 typedef struct estudio_politica {
     int estudio;
     POLITICAS *politica;
-    char *regras[];
+    char *regras;
 } ESTUDIO_POLITICAS;
 
 typedef struct evento {
@@ -50,7 +56,8 @@ typedef struct dia {
 
 typedef struct agendas {
     char agenda[MAX200];
-    DIAS *dia[];
+    int numDias;
+    DIAS *dia;
 } AGENDAS;
 
 typedef struct estudio {
@@ -227,8 +234,7 @@ void read_agenda_bin (LOTE_EDIFICIOS *lt, char filename[]);
  * @param idEstudio - id do estudio
  * @param filename - nome do ficheiro
  */
-void save_agenda_bin (LOTE_EDIFICIOS lt, int idEstudio, char filename[]);
-
+void save_agenda_bin (LOTE_EDIFICIOS lt, char filename[]);
 //-------------------------DIA----------------------------------------------------------
 
 /**
@@ -246,26 +252,25 @@ DIAS* find_dia (AGENDAS *pa, char dia[MAX10]);
  * @param dt - pointer dias
  * @param filename - nome do ficheiro
  */
-void read_eventos_csv (DIAS *dt, char filename[]);
+void read_eventos_csv (LOTE_EDIFICIOS *lt, char filename[]);
 
 /**
- * Função que insere um evento
- * @param d - pointer dia
- * @param id - id evento a inserir
- * @param tipo - tipo evento a inserir
- * @param data_inicio - data de inicio do evento a inserir
- * @param data_fim - data de fim do evento a inserir
+ *
+ * @param lt
+ * @param id
+ * @param tipo
+ * @param data_inicio
+ * @param data_fim
  * @param hospede
  * @param estudio
  * @param plataforma
  */
-void insert_evento(DIAS *d, int id, const char *tipo, const char *data_inicio, const char *data_fim, int hospede, int estudio, const char *plataforma);
-
+void insert_evento(LOTE_EDIFICIOS *lt, int id, char tipo[], char data_inicio[], char data_fim[], int hospede, int estudio, char plataforma[]);
 /**
  * Função que imprime no ecra os eventos de um dia
  * @param d - pointer dia
  */
-void print_eventos (DIAS *d);
+void print_eventos (LOTE_EDIFICIOS *lt);
 
 /**
  * Função que procura um evento num determinado dia
@@ -340,8 +345,15 @@ void edit_hospede(HOSPEDES *ph, int idHospede, char nome[MAX200]);
  */
 void remove_hospede(HOSPEDES *ph, int idHospede);
 
+
+
+
+void insert_dia (AGENDAS *pa, char dia[MAX10]);
+
 //--------------------
 
 void relatorio_ecra(LOTE_EDIFICIOS *lt);
+
+void relatorio_ficheiro(LOTE_EDIFICIOS *lt, char filename[]);
 
 #endif //PROJETOLPIAEDI_ALOJAMENTOS_H
