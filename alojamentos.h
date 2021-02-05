@@ -10,13 +10,14 @@
 #include <stdlib.h>
 
 #define MAXEDIFICIOS 20
-#define MAXESTUDIOS 200
-#define MAXAGENDAS 200
-#define MAXEVENTOS 500
-#define MAXDIAS 100
+#define MAXESTUDIOS 100
+#define MAXAGENDAS 15
+#define MAXEVENTOS 200
+#define MAXDIAS 40
+#define MAXPOLITICAS 10
 
 #define MAX200 200
-#define MAX10 12
+#define MAX10 15
 
 typedef struct hospede {
     int id;
@@ -33,8 +34,9 @@ typedef struct politica {
 
 typedef struct estudio_politica {
     int estudio;
+    int numPoliticas;
     POLITICAS *politica;
-    char *regras;
+    char regras[MAX200];
 } ESTUDIO_POLITICAS;
 
 typedef struct evento {
@@ -68,6 +70,7 @@ typedef struct estudio {
     int area;
     int numAgendas;
     AGENDAS *agendas;
+    int numPoliticas;
     ESTUDIO_POLITICAS *estudo_politicas;
 } ESTUDIOS;
 
@@ -105,7 +108,7 @@ int main_projeto();
  * @param morada - morada do edificio a adicionar
  * @param preco_dia_m2 - preco por dia por m^2 do edificio a adicionar
  */
-void insert_edificio(LOTE_EDIFICIOS *pl, int edificio, const char *nome, float longitude, float latitude, const char *morada, float preco_dia_m2);
+void insert_edificio(LOTE_EDIFICIOS *pl, int edificio, char nome[], float longitude, float latitude, char morada[], float preco_dia_m2);
 
 /**
  * Função que lê um ficheiro csv de edificios.
@@ -202,6 +205,35 @@ void print_estudios (LOTE_EDIFICIOS *lt);
  */
 void save_estudios_bin (LOTE_EDIFICIOS lt, char filename[]);
 
+void edit_estudio (LOTE_EDIFICIOS *lt, int estudio, int numero, int edificio, char configurcao[MAX10], int area);
+
+void remove_estudio (LOTE_EDIFICIOS *lt, int numEstudio);
+
+//-----------------------ESTUDIO POLITICAS --------------------------------------------------
+
+
+void insert_estudio_politicas (LOTE_EDIFICIOS *lt, int estudio, char politica[], char regras[MAX200]);
+
+void read_estudio_politicas_csv (LOTE_EDIFICIOS *lt, char filename[]);
+
+void read_politicas_csv(ESTUDIO_POLITICAS *pl, char filename[]);
+
+void insert_politicas (ESTUDIO_POLITICAS *ep, char politica[], char plataforma[], char regras[]);
+
+POLITICAS* find_politicas(ESTUDIO_POLITICAS *ep, char politica[MAX200]);
+
+
+//----------------------HOSPEDES -------------------------------------------------
+
+void insert_hospede (HOSPEDES *ph, int id, char nome[]);
+
+HOSPEDES* find_hospede(HOSPEDES *ph, int idHospede);
+
+void edit_hospede(HOSPEDES *ph, int idHospede, char nome[MAX200]);
+
+void remove_hospede(HOSPEDES *ph, int idHospede);
+
+
 //-----------------------AGENDA----------------------------------------------------------
 
 /**
@@ -235,7 +267,10 @@ void read_agenda_bin (LOTE_EDIFICIOS *lt, char filename[]);
  * @param filename - nome do ficheiro
  */
 void save_agenda_bin (LOTE_EDIFICIOS lt, char filename[]);
+
 //-------------------------DIA----------------------------------------------------------
+
+void insert_dia (AGENDAS *pa, char dia[]);
 
 /**
  * Função que procura um dia
@@ -243,7 +278,7 @@ void save_agenda_bin (LOTE_EDIFICIOS lt, char filename[]);
  * @param dia - dia a procurar
  * @return DIAS
  */
-DIAS* find_dia (AGENDAS *pa, char dia[MAX10]);
+DIAS * find_dia (AGENDAS *pa, char dia[MAX10]);
 
 //-----------------------EVENTOS---------------------------------------------------------
 
@@ -266,6 +301,7 @@ void read_eventos_csv (LOTE_EDIFICIOS *lt, char filename[]);
  * @param plataforma
  */
 void insert_evento(LOTE_EDIFICIOS *lt, int id, char tipo[], char data_inicio[], char data_fim[], int hospede, int estudio, char plataforma[]);
+
 /**
  * Função que imprime no ecra os eventos de um dia
  * @param d - pointer dia
@@ -300,60 +336,22 @@ void edit_evento (DIAS *pd, int idEvento, char tipo[MAX200], char data_inicio[],
  */
 void remove_evento (DIAS *pd, int idEvento);
 
-//-------------------POLITICAS-----------------------------------------------------------
+void read_eventos_bin (LOTE_EDIFICIOS *lt, char filename[]);
 
-/**
- * Função que insere politicas
- * @param ep - pointer ESTUDIO_POLTICAS
- * @param politica - politica a adicionar
- * @param plataforma - plataforma a adicionar
- * @param regras - regras a adicionar
- */
-void insert_politicas (ESTUDIO_POLITICAS *ep, char politica[], char plataforma[], char regras[]);
+void save_eventos_bin (LOTE_EDIFICIOS *lt, char filename[]);
 
 
-//---------------------HOSPEDES----------------------------------------------------------
-
-/**
- * Função que insere um hospede novo
- * @param ph - lista ligada de hospedes
- * @param id - id do hospede a adicionar
- * @param nome - nome do hospede a adicionar
- */
-void insert_hospede (HOSPEDES *ph, int id, char nome[]);
-
-/**
- * Função que procura um hospede por id
- * @param ph - lista ligada de hospedes
- * @param idHospede - id do hospede a procurar
- * @return hospede encontrado
- */
-HOSPEDES* find_hospede(HOSPEDES *ph, int idHospede);
-
-/**
- * Função para editar hospedes
- * @param ph - pointer da lista ligada de hospedes
- * @param idHospede - id do hospede a editar
- * @param nome - novo nome hospede
- */
-void edit_hospede(HOSPEDES *ph, int idHospede, char nome[MAX200]);
-
-/**
- * Função que remove um hospede
- * @param ph - pointer da lista ligada de hospedes
- * @param idHospede - id do hospede a eliminar
- */
-void remove_hospede(HOSPEDES *ph, int idHospede);
-
-
-
-
-void insert_dia (AGENDAS *pa, char dia[MAX10]);
-
-//--------------------
+//----------------------RELATORIOS------------------------------
 
 void relatorio_ecra(LOTE_EDIFICIOS *lt);
 
 void relatorio_ficheiro(LOTE_EDIFICIOS *lt, char filename[]);
+
+
+
+
+
+
+
 
 #endif //PROJETOLPIAEDI_ALOJAMENTOS_H
